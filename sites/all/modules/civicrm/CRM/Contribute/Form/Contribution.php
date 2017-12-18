@@ -1528,13 +1528,17 @@ class CRM_Contribute_Form_Contribution extends CRM_Contribute_Form_AbstractEditP
       // -- When set price set and tax for event, membeship contribution
       // -- and then editing contribution, tax was repeatedly deducted from
       // -- `total_amount`.
-      // -- Fix - ( total_amount = net_amount + tax_amount(if set) ).
+      // -- Fix - here in this case when edit contribution, if price set, "$submittedValues['total_amount']"
+      // -- amount is set null and as at this point we are nit doing any amount change, so set it to
+      // -- value in database. 
+      // --
+      // --	( total_amount(POSTED) = total_amount(DATABASE) ).
       // -- @author Abhijeet Bagul
       // -- ---------------------------------------------
       # - OLD
       //$submittedValues['total_amount'] = CRM_Utils_Array::value('total_amount', $this->_values) - CRM_Utils_Array::value('tax_amount', $this->_values);
       # - NEW
-      $submittedValues['total_amount'] = CRM_Utils_Array::value('net_amount', $this->_values) - CRM_Utils_Array::value('tax_amount', $this->_values);
+      $submittedValues['total_amount'] = CRM_Utils_Array::value('total_amount', $this->_values);
       // -- ---------------------------------------------
     }
     $this->assign('lineItem', !empty($lineItem) && !$isQuickConfig ? $lineItem : FALSE);
